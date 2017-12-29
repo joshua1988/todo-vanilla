@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todo App - Vanilla JS</title>
+</head>
+<body>
+    <header>
+        <h2>Todo Application</h2>
+    </header>
+    <section>
+        <div>
+            <input type="text" class="todoInput" onkeypress="handler.enterTodo(event)">
+            <button class="addBtn" onclick="handler.addTodo()">add</button>
+            <button class="deleteBtn" onclick="handler.deleteAll()">delete all</button>
+            <button class="completeBtn" onclick="handler.completeAll()">complete all</button>
+        </div>
+    </section>
+    <section>
+        <ul>
+            
+        </ul>
+    </section>
+
+    <script src="./app.js"></script>
+</body>
+</html>
