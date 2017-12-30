@@ -10,19 +10,23 @@ var todoList = {
         this.todos = [];
         view.displayTodo();
     },
+    deleteTodo: function(id) {
+        this.todos.splice(id, 1);
+    },
     completeAll: function () {
         for (let index = 0, length = this.todos.length; index < length; index++) {
             this.todos[index].completed = true;
         }
     },
     completeTodo: function(todo) {
-        return todo.completed = !todo.completed;
+        todo.completed = !todo.completed;
     },
     displayTodo: function() {
         console.log("Todo : ", this.todos);
     },
     getId: function(todo) {
-        return this.todos.indexOf(todo);
+        var a = {todoText: 1};
+        return this.todos.indexOf(a);
     }
 };
 
@@ -30,10 +34,7 @@ var handler = {
     addTodo: function() {
         var todo = document.querySelector('input');
         todoList.addTodo(todo.value);
-        console.log(todoList.getId(todo.value));
-        // var id = todoList.todos.indexOf(todo.value);
-
-        view.appendItem(todo.value);
+        view.appendTodoItem(todo.value);
         todo.value = '';
     },
     enterTodo: function(event) {
@@ -42,8 +43,15 @@ var handler = {
     deleteAll: function() {
         todoList.deleteAll();   
     },
+    deleteTodo: function(id, el) {
+        todoList.deleteTodo(id);
+        view.removeTodoItem(el);
+    },
     completeAll: function() {
         todoList.completeAll();
+    },
+    completeTodo: function(todo) {
+        todoList.completeTodo(todo);
     }
 };
 
@@ -54,19 +62,32 @@ var view = {
             ul.removeChild(ul.firstChild);
         }
         for (var i = 0, length = todoList.todos.length; i < length ; i++) {
-            this.appendItem(todoList.todos[i]);
+            this.appendTodoItem(todoList.todos[i]);
         }
     },
-    appendItem: function (todo) {
+    appendTodoItem: function (todo) {
+        var ul = document.querySelector('ul');
+        ul.appendChild(this.createListElement(todo));
+    },
+    removeTodoItem: function(buttonEl) {
+        buttonEl.parentNode.remove();
+    },
+    createListElement: function(todo) {
         var li = document.createElement('li');
         li.innerHTML = todo;
-        // li.id = ;
-
-        var ul = document.querySelector('ul');
-        ul.appendChild(li);
+        li.className = todoList.todos.length;
+        li.appendChild(this.createDeleteButton(todoList.todos.length-1));
+        return li;
+    },
+    createDeleteButton: function (id) {
+        var button = document.createElement('button');
+        button.innerText = 'delete';
+        button.onclick = function() {
+            handler.deleteTodo(id, this);
+        };
+        return button;
     },
     crossTodoItem: function(element) {
-        // console.log(element);
         element.setAttribute('style', 'text-decoration: line-through;');
     },
     unCrossTodoItem: function(element) {
@@ -75,13 +96,14 @@ var view = {
     attachEventListener: function() {
         var ul = document.querySelector('ul');
         ul.addEventListener('click', function (event) {
-        //    console.log(event.target.innerHTML);
-        //    view.crossTodoItem(event.target);
-           if (todoList.completeTodo(event.target.innerHTML)) {
+            if (event.target.tagName == 'LI') {
+                console.log(event.target.innerHTML);
+                handler.completeTodo(event.target.innerHTML);
+                
                view.crossTodoItem(event.target);
-           } else {
+            } else {
                view.unCrossTodoItem(event.target);
-           }
+            }
         });
     }
 }
@@ -89,3 +111,5 @@ var view = {
 window.onload = function() {
     view.attachEventListener();
 };
+
+// todoList.completeTodo(event.target.innerHTML) && 
